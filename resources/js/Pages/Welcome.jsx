@@ -1,3 +1,4 @@
+import ApplicationLogo from "@/Components/ApplicationLogo";
 import { Link, Head } from "@inertiajs/react";
 
 export default function Welcome({ auth, appVersion }) {
@@ -15,11 +16,7 @@ export default function Welcome({ auth, appVersion }) {
 
                 {/* Logo Section */}
                 <div className="relative z-10 w-full max-w-3xl text-center py-10">
-                    <img
-                        src="/images/logo.png"
-                        alt="Football Management Logo"
-                        className="mx-auto w-20 h-20"
-                    />
+                    <ApplicationLogo/>
                     <h1 className="text-4xl font-bold mt-4">
                         Football Management Tool
                     </h1>

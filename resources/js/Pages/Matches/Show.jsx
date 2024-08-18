@@ -35,8 +35,7 @@ export default function Show({ auth, match }) {
                                 Result:
                             </p>
                             <p className="text-xl mb-6">
-                                {match.team1.name} {match.team1_score} -{" "}
-                                {match.team2_score} {match.team2.name}
+                                {match.result.team_1_score}:{match.result.team_2_score}
                             </p>
 
                             <Link
