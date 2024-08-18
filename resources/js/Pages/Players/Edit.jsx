@@ -7,18 +7,24 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
 import SecondaryButton from "@/Components/SecondaryButton";
+import SelectInput from "@/Components/SelectInput";
 
-export default function Edit({ auth, player }) {
+export default function Edit({ auth, player, teams }) {
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
             name: player.name,
-            team_id: ''
+            team_id: player.team_id,
         });
 
     const submit = (e) => {
         e.preventDefault();
         patch(route("players.update", { id: player.id }));
     };
+
+    const teamOptions = teams.map((team) => ({
+        value: team.id,
+        label: team.name,
+    }));
 
     return (
         <AuthenticatedLayout
@@ -29,7 +35,7 @@ export default function Edit({ auth, player }) {
                 </h2>
             }
         >
-            <Head title="Create Post" />
+            <Head title="Edit Player" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <form onSubmit={submit} className="mt-6 space-y-6">
@@ -51,6 +57,26 @@ export default function Edit({ auth, player }) {
                             <InputError
                                 className="mt-2"
                                 message={errors.name}
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel htmlFor="team_id" value="Team" />
+
+                            <SelectInput
+                                id="team_id"
+                                className="mt-1 block w-full"
+                                value={data.team_id}
+                                onChange={(e) =>
+                                    setData("team_id", e.target.value)
+                                }
+                                options={teamOptions}
+                                required
+                            />
+
+                            <InputError
+                                className="mt-2"
+                                message={errors.team_id}
                             />
                         </div>
 

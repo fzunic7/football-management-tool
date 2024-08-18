@@ -7,8 +7,9 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
 import SecondaryButton from "@/Components/SecondaryButton";
+import SelectInput from "@/Components/SelectInput";
 
-export default function Create({ auth }) {
+export default function Create({ auth, teams }) {
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             name: "",
@@ -19,6 +20,11 @@ export default function Create({ auth }) {
         e.preventDefault();
         post(route("players.store"));
     };
+
+    const teamOptions = teams.map((team) => ({
+        value: team.id,
+        label: team.name,
+    }));
 
     return (
         <AuthenticatedLayout
@@ -51,6 +57,26 @@ export default function Create({ auth }) {
                             <InputError
                                 className="mt-2"
                                 message={errors.name}
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel htmlFor="team_id" value="Team" />
+
+                            <SelectInput
+                                id="team_id"
+                                className="mt-1 block w-full"
+                                value={data.team_id}
+                                onChange={(e) =>
+                                    setData("team_id", e.target.value)
+                                }
+                                options={teamOptions}
+                                required
+                            />
+
+                            <InputError
+                                className="mt-2"
+                                message={errors.team_id}
                             />
                         </div>
 

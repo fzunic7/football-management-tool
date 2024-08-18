@@ -9,17 +9,34 @@ use Inertia\Inertia;
 
 class MatchesController extends Controller
 {
+  /**
+   * Display a listing of the matches.
+   *
+   * @return \Inertia\Response
+   */
   public function index()
   {
     $matches = Matches::with(['team1', 'team2', 'result'])->get();
+
     return Inertia::render('Matches/Index', ['matches' => $matches]);
   }
 
+  /**
+   * Show the form for creating a new match.
+   *
+   * @return \Inertia\Response
+   */
   public function create()
   {
     return Inertia::render('Matches/Create');
   }
 
+  /**
+   * Store a newly created match in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function store(Request $request)
   {
     $request->validate([
@@ -37,16 +54,35 @@ class MatchesController extends Controller
     return Redirect::route('matches.index')->with('success', 'Match created successfully.');
   }
 
+  /**
+   * Display the specified match.
+   *
+   * @param  \App\Models\Matches  $match
+   * @return \Inertia\Response
+   */
   public function show(Matches $match)
   {
     return Inertia::render('Matches/Show', ['match' => $match]);
   }
 
+  /**
+   * Show the form for editing the specified match.
+   *
+   * @param  \App\Models\Matches  $match
+   * @return \Inertia\Response
+   */
   public function edit(Matches $match)
   {
     return Inertia::render('Matches/Edit', ['match' => $match]);
   }
 
+  /**
+   * Update the specified match in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  \App\Models\Matches  $match
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function update(Request $request, Matches $match)
   {
     $request->validate([
@@ -63,9 +99,16 @@ class MatchesController extends Controller
     return Redirect::route('matches.index')->with('success', 'Match updated successfully.');
   }
 
+  /**
+   * Remove the specified match from storage.
+   *
+   * @param  \App\Models\Matches  $match
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function destroy(Matches $match)
   {
     $match->delete();
-    return Redirect::route('match.index')->with('success', 'Match deleted successfully.');
+
+    return Redirect::route('matches.index')->with('success', 'Match deleted successfully.');
   }
 }

@@ -9,17 +9,34 @@ use Inertia\Inertia;
 
 class ResultController extends Controller
 {
+  /**
+   * Display a listing of the results.
+   *
+   * @return \Inertia\Response
+   */
   public function index()
   {
     $results = Result::with('match')->get();
+
     return Inertia::render('Results/Index', ['results' => $results]);
   }
 
+  /**
+   * Show the form for creating a new result.
+   *
+   * @return \Inertia\Response
+   */
   public function create()
   {
     return Inertia::render('Results/Create');
   }
 
+  /**
+   * Store a newly created result in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function store(Request $request)
   {
     $request->validate([
@@ -28,25 +45,44 @@ class ResultController extends Controller
       'team_2_score' => 'required',
     ]);
 
-    $match = new Result();
-    $match->matches_id = $request->matches_id;
-    $match->team_1_score = $request->team_1_score;
-    $match->team_2_score = $request->team_2_score;
-    $match->save();
+    $result = new Result();
+    $result->matches_id = $request->matches_id;
+    $result->team_1_score = $request->team_1_score;
+    $result->team_2_score = $request->team_2_score;
+    $result->save();
 
     return Redirect::route('results.index')->with('success', 'Result created successfully.');
   }
 
+  /**
+   * Display the specified result.
+   *
+   * @param  \App\Models\Result  $result
+   * @return \Inertia\Response
+   */
   public function show(Result $result)
   {
     return Inertia::render('Results/Show', ['result' => $result]);
   }
 
+  /**
+   * Show the form for editing the specified result.
+   *
+   * @param  \App\Models\Result  $result
+   * @return \Inertia\Response
+   */
   public function edit(Result $result)
   {
     return Inertia::render('Results/Edit', ['result' => $result]);
   }
 
+  /**
+   * Update the specified result in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  \App\Models\Result  $result
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function update(Request $request, Result $result)
   {
     $request->validate([
@@ -54,16 +90,23 @@ class ResultController extends Controller
       'team_2_score' => 'required',
     ]);
 
-    $result->team_1_id = $request->team_1_score;
-    $result->team_2_id = $request->team_2_score;
+    $result->team_1_score = $request->team_1_score;
+    $result->team_2_score = $request->team_2_score;
     $result->save();
 
-    return Redirect::route('Results.index')->with('success', 'Result updated successfully.');
+    return Redirect::route('results.index')->with('success', 'Result updated successfully.');
   }
 
+  /**
+   * Remove the specified result from storage.
+   *
+   * @param  \App\Models\Result  $result
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function destroy(Result $result)
   {
     $result->delete();
+
     return Redirect::route('results.index')->with('success', 'Result deleted successfully.');
   }
 }
