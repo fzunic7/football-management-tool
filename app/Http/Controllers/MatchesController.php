@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Matches;
+use App\Models\Result;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -28,7 +30,7 @@ class MatchesController extends Controller
    */
   public function create()
   {
-    return Inertia::render('Matches/Create');
+    return Inertia::render('Matches/Create', ['teams' => Team::all()]);
   }
 
   /**
@@ -42,7 +44,9 @@ class MatchesController extends Controller
     $request->validate([
       'team_1_id' => 'required',
       'team_2_id' => 'required',
-      'match_date' => 'required'
+      'match_date' => 'required',
+      'team_1_score' => 'required|integer',
+      'team_2_score' => 'required|integer',
     ]);
 
     $match = new Matches();
@@ -51,8 +55,15 @@ class MatchesController extends Controller
     $match->match_date = $request->match_date;
     $match->save();
 
-    return Redirect::route('matches.index')->with('success', 'Match created successfully.');
+    $result = new Result();
+    $result->matches_id = $match->id;
+    $result->team_1_score = $request->team_1_score;
+    $result->team_2_score = $request->team_2_score;
+    $result->save();
+
+    return Redirect::route('matches.index')->with('success', 'Match and result created successfully.');
   }
+
 
   /**
    * Display the specified match.
@@ -62,6 +73,8 @@ class MatchesController extends Controller
    */
   public function show(Matches $match)
   {
+    $match = $match->load('team1', 'team2', 'result');
+
     return Inertia::render('Matches/Show', ['match' => $match]);
   }
 
@@ -73,7 +86,13 @@ class MatchesController extends Controller
    */
   public function edit(Matches $match)
   {
-    return Inertia::render('Matches/Edit', ['match' => $match]);
+    $result = $match->result;
+
+    return Inertia::render('Matches/Edit', [
+      'match' => $match,
+      'result' => $result,
+      'teams' => Team::all()
+    ]);
   }
 
   /**
@@ -88,7 +107,9 @@ class MatchesController extends Controller
     $request->validate([
       'team_1_id' => 'required',
       'team_2_id' => 'required',
-      'match_date' => 'required'
+      'match_date' => 'required',
+      'team_1_score' => 'required|integer',
+      'team_2_score' => 'required|integer',
     ]);
 
     $match->team_1_id = $request->team_1_id;
@@ -96,7 +117,13 @@ class MatchesController extends Controller
     $match->match_date = $request->match_date;
     $match->save();
 
-    return Redirect::route('matches.index')->with('success', 'Match updated successfully.');
+    $result = $match->result ?: new Result();
+    $result->matches_id = $match->id;
+    $result->team_1_score = $request->team_1_score;
+    $result->team_2_score = $request->team_2_score;
+    $result->save();
+
+    return Redirect::route('matches.index')->with('success', 'Match and result updated successfully.');
   }
 
   /**

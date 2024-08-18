@@ -63,61 +63,77 @@ export default function Index({ auth, matches, message }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {matches.map((match) => (
-                                    <tr
-                                        key={match.id}
-                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                                    >
-                                        <th
-                                            scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                        >
-                                            {match.team1.name}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                        >
-                                            {match.team2.name}
-                                        </th>
-                                        <td className="px-6 py-4">
-                                            {match.match_date}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {`${match.result.team_1_score} - ${match.result.team_2_score}`}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <Link
-                                                href={route("matches.show", {
-                                                    id: match.id,
-                                                })}
-                                            >
-                                                <SecondaryButton className="mr-1 mb-1 text-sky-400">
-                                                    View
-                                                </SecondaryButton>
-                                            </Link>
-                                            <Link
-                                                href={route("matches.edit", {
-                                                    id: match.id,
-                                                })}
-                                            >
-                                                <SecondaryButton className="mr-1 mb-1 text-green-400">
-                                                    Edit
-                                                </SecondaryButton>
-                                            </Link>
+                                {matches.map((match) => {
+                                    const localizedDate = new Date(
+                                        match.match_date
+                                    ).toLocaleDateString(navigator.language, {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    });
 
-                                            <SecondaryButton
-                                                className="mr-1 mb-1 text-red-400"
-                                                disabled={processing}
-                                                onClick={() =>
-                                                    deleteTeam(match.id)
-                                                }
+                                    return (
+                                        <tr
+                                            key={match.id}
+                                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                        >
+                                            <th
+                                                scope="row"
+                                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                             >
-                                                Delete
-                                            </SecondaryButton>
-                                        </td>
-                                    </tr>
-                                ))}
+                                                {match.team1.name}
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                            >
+                                                {match.team2.name}
+                                            </th>
+                                            <td className="px-6 py-4">
+                                                {localizedDate}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {`${match.result?.team_1_score} - ${match.result?.team_2_score}`}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <Link
+                                                    href={route(
+                                                        "matches.show",
+                                                        {
+                                                            id: match.id,
+                                                        }
+                                                    )}
+                                                >
+                                                    <SecondaryButton className="mr-1 mb-1 text-sky-400">
+                                                        View
+                                                    </SecondaryButton>
+                                                </Link>
+                                                <Link
+                                                    href={route(
+                                                        "matches.edit",
+                                                        {
+                                                            id: match.id,
+                                                        }
+                                                    )}
+                                                >
+                                                    <SecondaryButton className="mr-1 mb-1 text-green-400">
+                                                        Edit
+                                                    </SecondaryButton>
+                                                </Link>
+
+                                                <SecondaryButton
+                                                    className="mr-1 mb-1 text-red-400"
+                                                    disabled={processing}
+                                                    onClick={() =>
+                                                        deleteTeam(match.id)
+                                                    }
+                                                >
+                                                    Delete
+                                                </SecondaryButton>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

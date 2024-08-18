@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import InputError from "@/Components/InputError";
@@ -7,55 +7,156 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
 import SecondaryButton from "@/Components/SecondaryButton";
+import SelectInput from "@/Components/SelectInput";
 
-export default function Create({ auth }) {
+export default function Create({ auth, teams }) {
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
-            name: "",
-            team_id: "",
+            team_1_id: "",
+            team_2_id: "",
+            match_date: "",
+            team_1_score: "",
+            team_2_score: "",
         });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("players.store"));
+        post(route("matches.store"));
     };
+
+    const team1Options = teams.map((team) => ({
+        value: team.id,
+        label: team.name,
+    }));
+
+    const team2Options = team1Options.filter(
+        (team) => team.value !== data.team_1_id
+    );
 
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Create Player
+                    Create Match
                 </h2>
             }
         >
-            <Head title="Create Player" />
+            <Head title="Create Match" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <form onSubmit={submit} className="mt-6 space-y-6">
                         <div>
-                            <InputLabel htmlFor="name" value="Name" />
+                            <InputLabel htmlFor="team_1_id" value="Team 1" />
 
-                            <TextInput
-                                id="name"
+                            <SelectInput
+                                id="team_1_id"
                                 className="mt-1 block w-full"
-                                value={data.name}
+                                value={data.team_1_id}
                                 onChange={(e) =>
-                                    setData("name", e.target.value)
+                                    setData("team_1_id", e.target.value)
                                 }
+                                options={team1Options}
                                 required
-                                isFocused
-                                autoComplete="name"
                             />
 
                             <InputError
                                 className="mt-2"
-                                message={errors.name}
+                                message={errors.team_1_id}
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel htmlFor="team_2_id" value="Team 2" />
+
+                            <SelectInput
+                                id="team_2_id"
+                                className="mt-1 block w-full"
+                                value={data.team_2_id}
+                                onChange={(e) =>
+                                    setData("team_2_id", e.target.value)
+                                }
+                                options={team2Options}
+                                required
+                            />
+
+                            <InputError
+                                className="mt-2"
+                                message={errors.team_2_id}
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="match_date"
+                                value="Match Date"
+                            />
+
+                            <TextInput
+                                id="match_date"
+                                type="date"
+                                className="mt-1 block w-full"
+                                value={data.match_date}
+                                onChange={(e) =>
+                                    setData("match_date", e.target.value)
+                                }
+                                required
+                            />
+
+                            <InputError
+                                className="mt-2"
+                                message={errors.match_date}
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="team_1_score"
+                                value="Team 1 Score"
+                            />
+
+                            <TextInput
+                                id="team_1_score"
+                                type="number"
+                                className="mt-1 block w-full"
+                                value={data.team_1_score}
+                                onChange={(e) =>
+                                    setData("team_1_score", e.target.value)
+                                }
+                                required
+                            />
+
+                            <InputError
+                                className="mt-2"
+                                message={errors.team_1_score}
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="team_2_score"
+                                value="Team 2 Score"
+                            />
+
+                            <TextInput
+                                id="team_2_score"
+                                type="number"
+                                className="mt-1 block w-full"
+                                value={data.team_2_score}
+                                onChange={(e) =>
+                                    setData("team_2_score", e.target.value)
+                                }
+                                required
+                            />
+
+                            <InputError
+                                className="mt-2"
+                                message={errors.team_2_score}
                             />
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <Link href={route("teams.index")}>
+                            <Link href={route("matches.index")}>
                                 <SecondaryButton disabled={processing}>
                                     Cancel
                                 </SecondaryButton>

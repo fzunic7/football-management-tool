@@ -29,9 +29,7 @@ class PlayerController extends Controller
    */
   public function create()
   {
-    $teams = Team::all();
-
-    return Inertia::render('Players/Create', ['teams' => $teams]);
+    return Inertia::render('Players/Create', ['teams' => Team::all()]);
   }
 
   /**
@@ -73,9 +71,7 @@ class PlayerController extends Controller
    */
   public function edit(Player $player)
   {
-    $teams = Team::all();
-
-    return Inertia::render('Players/Edit', ['player' => $player, 'teams' => $teams]);
+    return Inertia::render('Players/Edit', ['player' => $player, 'teams' => Team::all()]);
   }
 
   /**
